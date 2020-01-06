@@ -1,15 +1,55 @@
 <template>
-  <view>这是首页</view>
+  <view>
+    <swiper
+      class="swiper-carousel"
+      :indicator-dots="true"
+      indicator-color="rgba(255, 255, 255, .5)"
+      indicator-active-color="red"
+      :autoplay="true"
+      :circular="true">
+      <swiper-item v-for="item in carouselList" :key="item.movieId">
+        <view class="swiper-item">
+          <image class="swiper-image" :src="item.image"></image>
+        </view>
+      </swiper-item>
+    </swiper>
+  </view>
 </template>
 
 <script>
-export default {
-  data() {
-    return {};
-  },
-  onLoad() {},
-  methods: {}
-};
+  import { post } from '@/request/request.js'
+
+  export default {
+    data() {
+      return {
+        carouselList: []
+      }
+    },
+    onLoad() {
+      this.getCarouselList()
+    },
+    methods: {
+      getCarouselList() {
+        post({
+          url: "/index/carousel/list",
+          success: data => {
+            this.carouselList = data
+          }
+        })
+      }
+    }
+  };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+  .swiper-carousel {
+    width: 100%;
+    height: 440upx;
+  }
+
+  .swiper-item,
+  .swiper-image {
+    width: 100%;
+    height: 100%;
+  }
+</style>

@@ -1,8 +1,10 @@
 <script>
-	export default {
-	}
+export default {};
 </script>
 
 <style lang="scss">
-	/*每个页面公共css */
+uni-page-body {
+  height: 100%;
+  background-color: #f7f7f7;
+}
 </style>

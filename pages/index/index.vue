@@ -17,7 +17,7 @@
 </template>
 
 <script>
-  import { post } from '@/request/request.js'
+  import { getQQ, post } from '@/request/request.js'
 
   export default {
     data() {
@@ -25,7 +25,8 @@
         carouselList: []
       }
     },
-    onLoad() {
+    async onLoad() {
+      await getQQ()
       this.getCarouselList()
     },
     methods: {

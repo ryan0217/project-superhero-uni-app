@@ -1,12 +1,28 @@
-export const post = ({ url, data, success }) => {
-  url = `https://www.imovietrailer.com/superhero${url}?qq=lee12141967`
+const baseUrl = process.env.NODE_ENV === "development" ? "https://www.imovietrailer.com/superhero" :
+  "https://www.imovietrailer.com/superhero"
+
+let qq = ""
+
+export const getQQ = async () => {
+  return new Promise(resolve => {
+    uni.request({
+      url: `${baseUrl}/sys/switches`,
+      method: "POST",
+      success: ({ data: { ok } }) => {
+        qq = ok
+        resolve()
+      }
+    })
+  })
+}
+
+export const post = async ({ url, data, success }) => {
+  url = `${baseUrl}${url}?qq=${qq}`
   for (let key in data) {
     if (data.hasOwnProperty(key)) {
       url += `&${key}=${data[key]}`
     }
   }
-
-  let arr = [{ a: 1 }, { b: 2 }]
 
   uni.request({
     url,

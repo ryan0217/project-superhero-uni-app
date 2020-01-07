@@ -1,10 +1,16 @@
 <script>
-  export default {}
+  export default {
+
+  }
 </script>
 
 <style lang="scss">
-  uni-page-body {
-    height: 100%;
+  .page-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     background-color: #f7f7f7;
   }
 </style>

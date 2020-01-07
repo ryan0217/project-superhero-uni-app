@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view class="page-container">
     <swiper
       class="swiper-carousel"
       :indicator-dots="true"

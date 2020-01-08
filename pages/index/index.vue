@@ -24,19 +24,7 @@
         <view class="hot-super-scroll-item" v-for="item in hotMovieList" :key="item.id">
           <image class="poster" :src="item.cover"></image>
           <view class="title">{{item.name}}</view>
-          <view class="score">
-            <image
-              class="icon-star"
-              v-for="(sItem, sIndex) in Math.floor(item.score / 2)"
-              :key="'yellow-' + sIndex"
-              src="../../static/images/index/star-yellow.png"></image>
-            <image
-              class="icon-star"
-              v-for="(sItem, sIndex) in (5 - Math.floor(item.score / 2))"
-              :key="'gray-' + sIndex"
-              src="../../static/images/index/star-gray.png"></image>
-            {{item.score}}
-          </view>
+          <base-score :score="item.score" showNumber></base-score>
         </view>
       </scroll-view>
     </view>
@@ -45,10 +33,12 @@
 </template>
 
 <script>
+  import BaseScore from '@/components/BaseScore.vue'
   import { getQQ, post } from '@/request/request.js'
 
   export default {
     name: "Index",
+    components: { BaseScore },
     data() {
       return {
         carouselList: [],
@@ -146,21 +136,6 @@
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
-    }
-    .score {
-      display: flex;
-      align-items: center;
-      height: 32upx;
-      font-size: 12px;
-      color: grey;
-    }
-    .icon-star {
-      width: 20upx;
-      height: 20upx;
-
-      &:last-child {
-        margin-right: 8upx;
-      }
     }
   }
 </style>

@@ -1,18 +1,18 @@
 <template>
   <view class="page-container">
+    <!-- 轮播图 start -->
     <swiper
-      class="swiper-carousel"
+      class="swiper-container"
       :indicator-dots="true"
       indicator-color="rgba(255, 255, 255, .5)"
       indicator-active-color="red"
       :autoplay="true"
       :circular="true">
       <swiper-item v-for="item in carouselList" :key="item.movieId">
-        <view class="swiper-item">
-          <image class="swiper-image" :src="item.image"></image>
-        </view>
+        <image class="swiper-item" :src="item.image"></image>
       </swiper-item>
     </swiper>
+    <!-- 轮播图 end -->
   </view>
 </template>
 
@@ -25,7 +25,7 @@
         carouselList: []
       }
     },
-    async onLoad() {
+    async onLoad () {
       await getQQ()
       this.getCarouselList()
     },
@@ -43,13 +43,11 @@
 </script>
 
 <style lang="scss">
-  .swiper-carousel {
+  .swiper-container {
     width: 100%;
     height: 440upx;
   }
-
-  .swiper-item,
-  .swiper-image {
+  .swiper-item {
     width: 100%;
     height: 100%;
   }

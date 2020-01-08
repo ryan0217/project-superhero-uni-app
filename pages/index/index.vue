@@ -1,5 +1,5 @@
 <template>
-  <view class="page-container">
+  <view>
     <!-- 轮播图 start -->
     <swiper
       class="swiper-container"

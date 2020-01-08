@@ -3,11 +3,11 @@
     <!-- 轮播图 start -->
     <swiper
       class="swiper-container"
-      :indicator-dots="true"
+      indicator-dots
       indicator-color="rgba(255, 255, 255, .5)"
       indicator-active-color="red"
-      :autoplay="true"
-      :circular="true">
+      autoplay
+      circular>
       <swiper-item v-for="item in carouselList" :key="item.movieId">
         <image class="swiper-item" :src="item.image"></image>
       </swiper-item>
@@ -20,7 +20,7 @@
         <image class="title-icon" src="../../static/images/index/icon-hot-super.png"></image>
         <view class="title-text">热门超英</view>
       </view>
-      <scroll-view class="hot-super-scroll-container" scroll-x="true">
+      <scroll-view class="hot-super-scroll-wrap" scroll-x>
         <view class="hot-super-scroll-item" v-for="item in hotMovieList" :key="item.id">
           <image class="poster" :src="item.cover"></image>
           <view class="title">{{item.name}}</view>
@@ -29,6 +29,24 @@
       </scroll-view>
     </view>
     <!-- 热门超英 end -->
+
+    <!-- 热门预告 start -->
+    <view class="page-block hot-trailer-container">
+      <view class="title-container">
+        <image class="title-icon" src="../../static/images/index/icon-hot-trailer.png"></image>
+        <view class="title-text">热门预告</view>
+      </view>
+      <view class="hot-trailer-video-wrap">
+        <video
+          class="hot-trailer-video-item"
+          v-for="item in hotTrailerList"
+          :key="item.id"
+          :src="item.trailer"
+          :poster="item.poster"
+          controls></video>
+      </view>
+    </view>
+    <!-- 热门预告 end -->
   </view>
 </template>
 
@@ -42,13 +60,15 @@
     data() {
       return {
         carouselList: [],
-        hotMovieList: []
+        hotMovieList: [],
+        hotTrailerList: []
       }
     },
     async onLoad () {
       await getQQ()
       this.getCarouselList()
       this.getHotMovies()
+      this.getHotTrailers()
     },
     methods: {
       getCarouselList() {
@@ -64,8 +84,16 @@
           url: "/index/movie/hot",
           data: { type: "superhero" },
           success: data => {
-            console.log("getHotMovies", data)
             this.hotMovieList = data
+          }
+        })
+      },
+      getHotTrailers() {
+        post({
+          url: "/index/movie/hot",
+          data: { type: "trailer" },
+          success: data => {
+            this.hotTrailerList = data
           }
         })
       }
@@ -104,6 +132,11 @@
     }
   }
 
+  .hot-super-scroll-wrap, .hot-trailer-video-wrap {
+    margin-top: 20upx;
+  }
+
+  /* 热门超英 */
   .hot-super-container {
     padding: 20upx 0 2upx;
 
@@ -112,8 +145,7 @@
       padding-left: 20upx;
     }
   }
-  .hot-super-scroll-container {
-    margin-top: 20upx;
+  .hot-super-scroll-wrap {
     white-space: nowrap;
   }
   .hot-super-scroll-item {
@@ -137,5 +169,17 @@
       text-overflow: ellipsis;
       overflow: hidden;
     }
+  }
+
+  /* 热门预告 */
+  .hot-trailer-video-wrap {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .hot-trailer-video-item {
+    margin-bottom: 10upx;
+    width: 350upx;
+    height: 206upx;
   }
 </style>

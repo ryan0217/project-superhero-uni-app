@@ -48,6 +48,7 @@
   import { getQQ, post } from '@/request/request.js'
 
   export default {
+    name: "Index",
     data() {
       return {
         carouselList: [],

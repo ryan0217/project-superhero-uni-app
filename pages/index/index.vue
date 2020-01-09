@@ -47,6 +47,30 @@
       </view>
     </view>
     <!-- 热门预告 end -->
+
+    <!-- 猜你喜欢 start -->
+    <view class="page-block favorite-movie-container">
+      <view class="title-container">
+        <image class="title-icon" src="../../static/images/index/icon-favorite-movie.png"></image>
+        <view class="title-text">猜你喜欢</view>
+      </view>
+      <view class="favorite-movie-wrap">
+        <view class="favorite-movie-item" v-for="item in favoriteMovieList" :key="item.id">
+          <image class="cover" :src="item.cover"></image>
+          <view class="introduce-wrap">
+            <view class="introduce-name">{{item.name}}</view>
+            <base-score :score="item.score"></base-score>
+            <view class="introduce-info">{{item.basicInfo}}</view>
+            <view class="introduce-release">{{item.releaseDate}}</view>
+          </view>
+          <view class="praise-wrap">
+            <image class="icon-praise" src="../../static/images/index/praise.png"></image>
+            赞一下
+          </view>
+        </view>
+      </view>
+    </view>
+    <!-- 猜你喜欢 end -->
   </view>
 </template>
 
@@ -61,7 +85,8 @@
       return {
         carouselList: [],
         hotMovieList: [],
-        hotTrailerList: []
+        hotTrailerList: [],
+        favoriteMovieList: []
       }
     },
     async onLoad () {
@@ -69,6 +94,7 @@
       this.getCarouselList()
       this.getHotMovies()
       this.getHotTrailers()
+      this.getFavoriteMovies()
     },
     methods: {
       getCarouselList() {
@@ -94,6 +120,14 @@
           data: { type: "trailer" },
           success: data => {
             this.hotTrailerList = data
+          }
+        })
+      },
+      getFavoriteMovies() {
+        post({
+          url: "/index/guessULike",
+          success: data => {
+            this.favoriteMovieList = data
           }
         })
       }
@@ -132,7 +166,7 @@
     }
   }
 
-  .hot-super-scroll-wrap, .hot-trailer-video-wrap {
+  .hot-super-scroll-wrap, .hot-trailer-video-wrap, .favorite-movie-wrap {
     margin-top: 20upx;
   }
 
@@ -181,5 +215,56 @@
     margin-bottom: 10upx;
     width: 350upx;
     height: 206upx;
+  }
+
+  /* 猜你喜欢 */
+  .favorite-movie-wrap {
+    font-size: 14px;
+    color: grey;
+  }
+  .favorite-movie-item {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 30upx;
+
+    &:last-of-type {
+      padding-bottom: 0;
+    }
+    .cover {
+      width: 180upx;
+      height: 240upx;
+      border-radius: 3%;
+    }
+    .introduce-wrap {
+      display: flex;
+      flex-direction: column;
+      width: 340upx;
+    }
+    .introduce-name {
+      font-size: 18px;
+      color: #000;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    .introduce-info, .introduce-release {
+      /* white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden; */
+    }
+    .praise-wrap {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      width: 140upx;
+      color: #feab2a;
+      border-left: 2px dashed #dbdbda;
+    }
+    .icon-praise {
+      width: 40upx;
+      height: 40upx;
+    }
   }
 </style>

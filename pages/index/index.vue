@@ -55,7 +55,7 @@
         <view class="title-text">猜你喜欢</view>
       </view>
       <view class="favorite-movie-wrap">
-        <view class="favorite-movie-item" v-for="item in favoriteMovieList" :key="item.id">
+        <view class="favorite-movie-item" v-for="(item, index) in favoriteMovieList" :key="item.id">
           <image class="cover" :src="item.cover"></image>
           <view class="introduce-wrap">
             <view class="introduce-name">{{item.name}}</view>
@@ -63,9 +63,10 @@
             <view class="introduce-info">{{item.basicInfo}}</view>
             <view class="introduce-release">{{item.releaseDate}}</view>
           </view>
-          <view class="praise-wrap">
+          <view class="praise-wrap" @click="showPraiseAnimation(index)">
             <image class="icon-praise" src="../../static/images/index/praise.png"></image>
             赞一下
+            <view class="animation-add-one" :animation="animationDataList[index]">+1</view>
           </view>
         </view>
       </view>
@@ -86,7 +87,9 @@
         carouselList: [],
         hotMovieList: [],
         hotTrailerList: [],
-        favoriteMovieList: []
+        favoriteMovieList: [],
+        animation: {},
+        animationDataList: []
       }
     },
     async onLoad () {
@@ -95,6 +98,13 @@
       this.getHotMovies()
       this.getHotTrailers()
       this.getFavoriteMovies()
+      this.animation = uni.createAnimation({
+        duration: 400,
+        timingFunction: "ease"
+      })
+    },
+    onUnload() {
+      this.animationDataList = []
     },
     methods: {
       getCarouselList() {
@@ -128,8 +138,19 @@
           url: "/index/guessULike",
           success: data => {
             this.favoriteMovieList = data
+            this.favoriteMovieList.forEach(item => this.animationDataList.push({}))
           }
         })
+      },
+      showPraiseAnimation(index) {
+        this.animation.translateY(-30).opacity(1).step()
+        this.animationDataList[index] = this.animation.export()
+
+        // 重置动画初始位置
+        setTimeout(() => {
+          this.animation.translateY(0).opacity(0).step({ duration: 0 })
+          this.animationDataList[index] = this.animation.export()
+        }, 500)
       }
     }
   };
@@ -265,6 +286,17 @@
     .icon-praise {
       width: 40upx;
       height: 40upx;
+    }
+    .animation-add-one {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      line-height: 240upx;
+      font-weight: bold;
+      text-align: center;
+      opacity: 0;
     }
   }
 </style>

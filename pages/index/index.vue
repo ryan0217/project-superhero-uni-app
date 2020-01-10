@@ -55,7 +55,7 @@
         <view class="title-text">猜你喜欢</view>
       </view>
       <view class="favorite-movie-wrap">
-        <view class="favorite-movie-item" v-for="(item, index) in favoriteMovieList" :key="item.id">
+        <view class="favorite-movie-item" v-for="(item, index) in favoriteMovieList" :key="index">
           <image class="cover" :src="item.cover"></image>
           <view class="introduce-wrap">
             <view class="introduce-name">{{item.name}}</view>

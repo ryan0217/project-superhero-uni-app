@@ -16,7 +16,7 @@ export const getQQ = async () => {
   })
 }
 
-export const post = async ({ url, data, success }) => {
+export const post = async ({ url, data, success, complete }) => {
   url = `${baseUrl}${url}?qq=${qq}`
   for (let key in data) {
     if (data.hasOwnProperty(key)) {
@@ -29,6 +29,9 @@ export const post = async ({ url, data, success }) => {
     method: "POST",
     success: ({ data: { data, status } }) => {
       if (status === 200) success(data)
+    },
+    complete: () => {
+      complete && complete()
     }
   })
 }

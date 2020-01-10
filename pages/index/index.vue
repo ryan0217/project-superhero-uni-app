@@ -106,6 +106,14 @@
     onUnload() {
       this.animationDataList = []
     },
+    onPullDownRefresh() {
+      uni.stopPullDownRefresh()
+      uni.showLoading({
+        title: "加载中",
+        mask: true
+      })
+      this.getFavoriteMovies()
+    },
     methods: {
       getCarouselList() {
         post({
@@ -139,6 +147,9 @@
           success: data => {
             this.favoriteMovieList = data
             this.favoriteMovieList.forEach(item => this.animationDataList.push({}))
+          },
+          complete: () => {
+            uni.hideLoading()
           }
         })
       },

@@ -109,7 +109,7 @@
     onPullDownRefresh() {
       uni.stopPullDownRefresh()
       uni.showLoading({
-        title: "加载中",
+        title: "加载中...",
         mask: true
       })
       this.getFavoriteMovies()

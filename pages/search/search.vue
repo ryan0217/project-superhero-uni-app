@@ -49,7 +49,7 @@
     methods: {
       searchMovies() {
         uni.showLoading({
-          title: "搜索中",
+          title: "搜索中...",
           mask: true
         })
         post({

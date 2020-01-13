@@ -8,16 +8,21 @@
         type="text"
         placeholder="请输入搜索片名"
         placeholder-class="placeholder"
-        :maxlength="20">
+        :maxlength="20"
+        focus
+        confirm-type="search"
+        @input="inputKeywords"
+        @confirm="searchMovies">
     </view>
     <!-- 搜索框 end -->
     
     <!-- 电影列表 start -->
-    <view class="movie-wrap">
+    <view class="movie-wrap" v-if="movieList.length > 0">
       <view class="movie-item" v-for="item in movieList" :key="item.id">
         <image class="img" :src="item.cover"></image>
       </view>
     </view>
+    <view class="movie-wrap-tip" v-else>没有找到相关内容</view>
     <!-- 电影列表 end -->
   </view>
 </template>
@@ -43,13 +48,23 @@
     },
     methods: {
       searchMovies() {
+        uni.showLoading({
+          title: "搜索中",
+          mask: true
+        })
         post({
           url: "/search/list",
           data: this.searchObj,
           success: data => {
             this.movieList = data.rows
+          },
+          complete: () => {
+            uni.hideLoading()
           }
         })
+      },
+      inputKeywords(e) {
+        this.searchObj.keywords = e.detail.value
       }
     }
   }
@@ -90,9 +105,6 @@
   // 电影列表
   .movie-wrap {
     box-sizing: border-box;
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
     padding: 20upx;
     max-height: calc(100% - 88upx);
     background-color: #fff;
@@ -100,13 +112,19 @@
     -webkit-overflow-scrolling: touch;
   }
   .movie-item {
-    padding: 10upx 0;
-    width: 210upx;
-    height: 284upx;
+    display: inline-block;
+    padding: 12upx;
+    width: 212upx;
+    height: 286upx;
     
     .img {
       width: 100%;
       height: 100%;
     }
+  }
+  .movie-wrap-tip {
+    line-height: 60upx;
+    font-size: 16px;
+    text-align: center;
   }
 </style>

@@ -1,28 +1,29 @@
 <template>
   <view class="page-search">
     <!-- 搜索框 start -->
-    <view class="search-box">
-      <i class="iconfont icon-sousuo"></i>
-      <input
-        class="input"
-        type="text"
-        placeholder="请输入搜索片名"
-        placeholder-class="placeholder"
-        :maxlength="20"
-        focus
-        confirm-type="search"
-        @input="inputKeywords"
-        @confirm="searchMovies">
+    <view class="search-box-container">
+      <view class="search-box">
+        <i class="iconfont icon-sousuo"></i>
+        <input
+          class="input"
+          type="text"
+          placeholder="请输入搜索片名"
+          placeholder-class="placeholder"
+          :maxlength="20"
+          focus
+          confirm-type="search"
+          @input="inputKeywords"
+          @confirm="searchMovies">
+      </view>
     </view>
     <!-- 搜索框 end -->
-    
+
     <!-- 电影列表 start -->
     <view class="movie-wrap" v-if="movieList.length > 0">
-      <view class="movie-item" v-for="item in movieList" :key="item.id">
+      <view class="movie-item" v-for="(item, index) in movieList" :key="index">
         <image class="img" :src="item.cover"></image>
       </view>
     </view>
-    <view class="movie-wrap-tip" v-else>没有找到相关内容</view>
     <!-- 电影列表 end -->
   </view>
 </template>
@@ -34,11 +35,13 @@
     name: "Search",
     data() {
       return {
+        isSearching: false,
         searchObj: {
           keywords: "",
-          page: "",
-          pageSize: "15"
+          page: 1,
+          pageSize: 15
         },
+        records: null,
         movieList: []
       }
     },
@@ -46,19 +49,34 @@
       await getQQ()
       this.searchMovies()
     },
+    onReachBottom() {
+      if (this.isSearching) return
+      this.isSearching = true
+
+      if (this.movieList.length < this.records) {
+        this.searchObj.page += 1
+        this.searchMovies({ page: this.searchObj.page })
+      }
+    },
     methods: {
-      searchMovies() {
+      searchMovies(params = {}) {
+        let { type, page = 1 } = params
+        let isConfirm = params.type === "confirm"
+        this.searchObj.page = isConfirm ? 1 : page
+
         uni.showLoading({
           title: "搜索中...",
           mask: true
         })
         post({
           url: "/search/list",
-          data: this.searchObj,
-          success: data => {
-            this.movieList = data.rows
+          data: { ...this.searchObj },
+          success: ({ records, rows }) => {
+            this.records = records
+            this.movieList = this.searchObj.page === 1 ? rows : this.movieList.concat(rows)
           },
           complete: () => {
+            this.isSearching = false
             uni.hideLoading()
           }
         })
@@ -71,20 +89,22 @@
 </script>
 
 <style lang="scss">
-  $search-height: 68upx;
+  $search-box-height: 68upx;
+  $search-box-container-height: $search-box-height + 20upx;
 
-  page, .page-search {
-    height: 100%;
-    overflow: hidden;
-  }
-  
   // 搜索框
+  .search-box-container {
+    position: fixed;
+    width: 100%;
+    background-color: #f7f7f7;
+    z-index: 1;
+  }
   .search-box {
     display: flex;
     align-items: center;
     margin: 0 20upx 20upx;
     padding: 0 20upx;
-    height: $search-height;
+    height: $search-box-height;
     background-color: #eaeaea;
 
     .icon-sousuo {
@@ -98,15 +118,14 @@
       font-size: 14px;
     }
     .placeholder {
-      line-height: $search-height;
+      line-height: $search-box-height;
     }
   }
-  
+
   // 电影列表
   .movie-wrap {
     box-sizing: border-box;
-    padding: 20upx;
-    max-height: calc(100% - 88upx);
+    padding: calc(#{$search-box-container-height} + 20upx) 20upx 20upx;
     background-color: #fff;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -116,15 +135,10 @@
     padding: 12upx;
     width: 212upx;
     height: 286upx;
-    
+
     .img {
       width: 100%;
       height: 100%;
     }
-  }
-  .movie-wrap-tip {
-    line-height: 60upx;
-    font-size: 16px;
-    text-align: center;
   }
 </style>

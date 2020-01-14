@@ -20,7 +20,11 @@
 
     <!-- 电影列表 start -->
     <view class="movie-wrap" v-if="movieList.length > 0">
-      <view class="movie-item" v-for="(item, index) in movieList" :key="index">
+      <view
+        class="movie-item"
+        v-for="(item, index) in movieList"
+        :key="index"
+        @click="toDetailPage(item.id)">
         <image class="img" :src="item.cover"></image>
       </view>
     </view>
@@ -83,6 +87,11 @@
       },
       inputKeywords(e) {
         this.searchObj.keywords = e.detail.value
+      },
+      toDetailPage(id) {
+        uni.navigateTo({
+          url: `../detail/detail?id=${id}`
+        })
       }
     }
   }
@@ -127,8 +136,6 @@
     box-sizing: border-box;
     padding: calc(#{$search-box-container-height} + 20upx) 20upx 20upx;
     background-color: #fff;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
   }
   .movie-item {
     display: inline-block;

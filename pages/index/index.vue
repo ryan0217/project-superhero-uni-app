@@ -59,14 +59,9 @@
           <image class="cover" :src="item.cover"></image>
           <view class="introduce-wrap">
             <view class="introduce-name">{{item.name}}</view>
-            <base-score :score="item.score"></base-score>
+            <base-score class="introduce-score" :score="item.score"></base-score>
             <view class="introduce-info">{{item.basicInfo}}</view>
             <view class="introduce-release">{{item.releaseDate}}</view>
-          </view>
-          <view class="praise-wrap" @click="showPraiseAnimation(index)">
-            <image class="icon-praise" src="../../static/images/index/praise.png"></image>
-            赞一下
-            <view class="animation-add-one" :animation="animationDataList[index]">+1</view>
           </view>
         </view>
       </view>
@@ -87,9 +82,7 @@
         carouselList: [],
         hotMovieList: [],
         hotTrailerList: [],
-        favoriteMovieList: [],
-        animation: {},
-        animationDataList: []
+        favoriteMovieList: []
       }
     },
     async onLoad () {
@@ -98,13 +91,6 @@
       this.getHotMovies()
       this.getHotTrailers()
       this.getFavoriteMovies()
-      this.animation = uni.createAnimation({
-        duration: 400,
-        timingFunction: "ease"
-      })
-    },
-    onUnload() {
-      this.animationDataList = []
     },
     onPullDownRefresh() {
       uni.stopPullDownRefresh()
@@ -146,22 +132,11 @@
           url: "/index/guessULike",
           success: data => {
             this.favoriteMovieList = data
-            this.favoriteMovieList.forEach(item => this.animationDataList.push({}))
           },
           complete: () => {
             uni.hideLoading()
           }
         })
-      },
-      showPraiseAnimation(index) {
-        this.animation.translateY(-30).opacity(1).step()
-        this.animationDataList[index] = this.animation.export()
-
-        // 重置动画初始位置
-        setTimeout(() => {
-          this.animation.translateY(0).opacity(0).step({ duration: 0 })
-          this.animationDataList[index] = this.animation.export()
-        }, 500)
       }
     }
   };
@@ -256,58 +231,34 @@
   }
   .favorite-movie-item {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     padding-bottom: 30upx;
 
     &:last-of-type {
-      padding-bottom: 0;
+      padding-bottom: 10upx;
     }
     .cover {
-      width: 180upx;
-      height: 240upx;
+      width: 150upx;
+      height: 210upx;
       border-radius: 3%;
     }
     .introduce-wrap {
       display: flex;
       flex-direction: column;
-      width: 340upx;
+      width: 480upx;
     }
     .introduce-name {
-      font-size: 18px;
+      font-size: 22px;
       color: #000;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
     }
+    .introduce-score {
+      height: 48upx;
+    }
     .introduce-info, .introduce-release {
-      /* white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden; */
-    }
-    .praise-wrap {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      width: 140upx;
-      color: #feab2a;
-      border-left: 2px dashed #dbdbda;
-    }
-    .icon-praise {
-      width: 40upx;
-      height: 40upx;
-    }
-    .animation-add-one {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      line-height: 240upx;
-      font-weight: bold;
-      text-align: center;
-      opacity: 0;
+      line-height: 48upx;
     }
   }
 </style>

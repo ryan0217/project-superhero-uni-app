@@ -8,7 +8,10 @@
       indicator-active-color="red"
       autoplay
       circular>
-      <swiper-item v-for="item in carouselList" :key="item.movieId">
+      <swiper-item
+        v-for="(item, index) in carouselList"
+        :key="index"
+        @click="toDetailPage(item.movieId)">
         <image class="swiper-item" :src="item.image"></image>
       </swiper-item>
     </swiper>
@@ -21,7 +24,11 @@
         <view class="title-text">热门超英</view>
       </view>
       <scroll-view class="hot-super-scroll-wrap" scroll-x>
-        <view class="hot-super-scroll-item" v-for="item in hotMovieList" :key="item.id">
+        <view
+          class="hot-super-scroll-item"
+          v-for="(item, index) in hotMovieList"
+          :key="index"
+          @click="toDetailPage(item.id)">
           <image class="poster" :src="item.cover"></image>
           <view class="title">{{item.name}}</view>
           <base-score :score="item.score" showNumber></base-score>
@@ -55,7 +62,11 @@
         <view class="title-text">猜你喜欢</view>
       </view>
       <view class="favorite-movie-wrap">
-        <view class="favorite-movie-item" v-for="(item, index) in favoriteMovieList" :key="index">
+        <view
+          class="favorite-movie-item"
+          v-for="(item, index) in favoriteMovieList"
+          :key="index"
+          @click="toDetailPage(item.id)">
           <image class="cover" :src="item.cover"></image>
           <view class="introduce-wrap">
             <view class="introduce-name">{{item.name}}</view>
@@ -101,6 +112,11 @@
       this.getFavoriteMovies()
     },
     methods: {
+      toDetailPage(id) {
+        uni.navigateTo({
+          url: `../detail/detail?id=${id}`
+        })
+      },
       getCarouselList() {
         post({
           url: "/index/carousel/list",

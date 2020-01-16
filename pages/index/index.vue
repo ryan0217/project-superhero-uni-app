@@ -263,12 +263,14 @@
       flex-direction: column;
       width: 480upx;
     }
-    .introduce-name {
-      font-size: 22px;
-      color: #000;
+    .introduce-name, .introduce-info, .introduce-release {
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
+    }
+    .introduce-name {
+      font-size: 22px;
+      color: #000;
     }
     .introduce-score {
       height: 48upx;

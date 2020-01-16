@@ -48,7 +48,7 @@
         <scroll-view class="movie-still-scroll-wrap" scroll-x>
           <view
             class="movie-still-scroll-item"
-            v-for="(item, index) in JSON.parse(info.plotPics)"
+            v-for="(item, index) in info.plotPics"
             :key="index">
             <image class="img" :src="item" mode="aspectFill"></image>
           </view>
@@ -84,6 +84,7 @@
         post({
           url: `/search/trailer/${this.id}`,
           success: data => {
+            data.plotPics = JSON.parse(data.plotPics)
             this.info = data
           }
         })
@@ -182,7 +183,7 @@
 
   /* 电影次要信息 */
   .movie-info-secondary-wrap {
-    padding: 0 40upx;
+    padding: 0 40upx 20upx;
   }
   .movie-info-secondary-item {
     padding: 20upx 0;
@@ -233,7 +234,7 @@
     display: inline-block;
     margin-right: 10upx;
     height: 240upx;
-    
+
     &:last-of-type {
       margin-right: 0;
     }

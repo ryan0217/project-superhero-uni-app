@@ -10,7 +10,6 @@
           placeholder="请输入搜索片名"
           placeholder-class="placeholder"
           :maxlength="20"
-          focus
           confirm-type="search"
           @input="inputKeywords"
           @confirm="searchMovies">

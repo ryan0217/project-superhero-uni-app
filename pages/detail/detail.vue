@@ -6,7 +6,10 @@
       :poster="info.poster"
       controls></video>
     <view class="movie-info-container">
-      <image class="movie-cover" :src="info.cover"></image>
+      <image
+        class="movie-cover"
+        :src="info.cover"
+        @click="previewImage(info.cover)"></image>
       <view class="movie-info-wrap">
         <view class="movie-name">{{info.name}}</view>
         <view class="movie-info-item">{{info.basicInfo}}</view>
@@ -36,7 +39,8 @@
           <view
             class="movie-staff-scroll-item"
             v-for="(item, index) in staffs"
-            :key="index">
+            :key="index"
+            @click="previewImage(staffImgUrls, index)">
             <image class="img" :src="item.photo"></image>
             <view class="name">{{item.name}}</view>
             <view class="role">{{item.actName}}</view>
@@ -50,7 +54,7 @@
             class="movie-still-scroll-item"
             v-for="(item, index) in info.plotPics"
             :key="index">
-            <image class="img" :src="item" mode="aspectFill"></image>
+            <image class="img" :src="item" mode="aspectFill" @click="previewImage(info.plotPics, index)"></image>
           </view>
         </scroll-view>
       </view>
@@ -70,6 +74,11 @@
         id: null,
         info: {},
         staffs: []
+      }
+    },
+    computed: {
+      staffImgUrls () {
+        return this.staffs.map(item => item.photo)
       }
     },
     async onLoad ({ id }) {
@@ -112,6 +121,10 @@
             })
           }
         })
+      },
+      previewImage(urls, current = 0) {
+        urls = Array.isArray(urls) ? urls : [urls]
+        uni.previewImage({ urls, current })
       }
     }
   }

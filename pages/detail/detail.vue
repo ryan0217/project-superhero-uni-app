@@ -54,7 +54,11 @@
             class="movie-still-scroll-item"
             v-for="(item, index) in info.plotPics"
             :key="index">
-            <image class="img" :src="item" mode="aspectFill" @click="previewImage(info.plotPics, index)"></image>
+            <image
+              class="img"
+              :src="item"
+              mode="aspectFill"
+              @click="previewImage(info.plotPics, index)"></image>
           </view>
         </scroll-view>
       </view>
@@ -87,6 +91,14 @@
       this.getMovieInfo()
       await this.getMovieDirectors()
       this.getMovieActors()
+    },
+    onShareAppMessage({ target }) {
+      console.log(`/pages/detail/detail?id=${this.id}`, this.info.name)
+      return {
+        title: this.info.name,
+        path: `/pages/detail/detail?id=${this.id}`,
+        imageUrl: this.info.poster
+      }
     },
     methods: {
       getMovieInfo() {
